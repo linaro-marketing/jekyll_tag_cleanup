@@ -1,4 +1,3 @@
-import csv
 import frontmatter
 import os
 import re
@@ -10,26 +9,29 @@ parser.add_argument('tags', metavar='T', help='Path to newline-separated allowed
 args = parser.parse_args()
 
 def get_allowed_tags(tags_path):
-    allowed_tags = []
-    with open(tags_path, newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-        print(reader)
-        for row in reader:
-            exceptions = ["and", "or", "the", "a", "of", "in"]
-            lowercase_words = re.split(" ", row[0])
-            lowercase_words = [word if word.isupper() or any(x.isupper() for x in word) else word.lower() for word in lowercase_words]
-            final_words = [lowercase_words[0].capitalize() if lowercase_words[0].islower() else lowercase_words[0]]
-            final_words += [word if word in exceptions else word.capitalize() for word in lowercase_words[1:]]
-            final_tag = " ".join(final_words)
-            # remove duplicates!!!
-            found_duplicate = False
-            for tag in allowed_tags:
-                if final_tag.lower() == tag.lower():
-                    found_duplicate = True
-            if not found_duplicate:
-                allowed_tags.append(final_tag)
-                
-    return allowed_tags
+    dirty_tags = []
+    clean_allowed_tags = []
+    with open(tags_path) as my_new_tags_file:
+        for line in my_new_tags_file:
+            dirty_tags.append(line.rstrip("\n"))
+    print(dirty_tags)
+    # Cleanup the new tags and remove duplicates / capitalize appropriately
+    for tag in dirty_tags:
+        exceptions = ["and", "or", "the", "a", "of", "in"]
+        lowercase_words = re.split(" ", tag)
+        lowercase_words = [word if word.isupper() or any(x.isupper() for x in word) else word.lower() for word in lowercase_words]
+        final_words = [lowercase_words[0].capitalize() if lowercase_words[0].islower() else lowercase_words[0]]
+        final_words += [word if word in exceptions else word.capitalize() for word in lowercase_words[1:]]
+        final_tag = " ".join(final_words)
+        # remove duplicates!!!
+        found_duplicate = False
+        for tag in clean_allowed_tags:
+            if final_tag.lower() == tag.lower():
+                found_duplicate = True
+        if not found_duplicate:
+            clean_allowed_tags.append(final_tag)
+    print(clean_allowed_tags)
+    return clean_allowed_tags
 
 def replace_tags_in_posts(root, allowed_tags):
     file_list = []
