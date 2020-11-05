@@ -54,7 +54,7 @@ def replace_tags_in_posts(root, allowed_tags):
             post["tags"] = new_post_tags
         # write new tags to file
         with open(file, "w+") as new_post_file:
-            new_post_file.writelines(frontmatter.dumps(post))
+            new_post_file.writelines(frontmatter.dumps(post, sort_keys=False))
                     
 
     
