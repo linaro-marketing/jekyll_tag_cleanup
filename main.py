@@ -39,6 +39,7 @@ def replace_tags_in_posts(root, allowed_tags):
                 file_list.append(os.path.join(path, name))
     # Open each markdown file found and get the current list of tags
     for file in file_list:
+        print("Processing {}...".format(file))
         post = frontmatter.load(file)
         if post["tags"]:
             current_post_tags = post["tags"]
@@ -48,9 +49,9 @@ def replace_tags_in_posts(root, allowed_tags):
                 for allowed_tag in allowed_tags:
                     if post_tag.lower() == allowed_tag.lower():
                         new_post_tags.append(allowed_tag)
-            print("current:", current_post_tags)
-            print("new:", new_post_tags)
-            input()
+            print("Current Tags:", current_post_tags)
+            print("Replacing with:", new_post_tags)
+            post["tags"] = new_post_tags
         # write new tags to file
         with open(file, "w+") as new_post_file:
             new_post_file.writelines(frontmatter.dumps(post))
