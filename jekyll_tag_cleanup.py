@@ -14,7 +14,6 @@ def get_allowed_tags(tags_path):
     with open(tags_path) as my_new_tags_file:
         for line in my_new_tags_file:
             dirty_tags.append(line.rstrip("\n"))
-    print(dirty_tags)
     # Cleanup the new tags and remove duplicates / capitalize appropriately
     for tag in dirty_tags:
         exceptions = ["and", "or", "the", "a", "of", "in"]
@@ -30,7 +29,6 @@ def get_allowed_tags(tags_path):
                 found_duplicate = True
         if not found_duplicate:
             clean_allowed_tags.append(final_tag)
-    print(clean_allowed_tags)
     return clean_allowed_tags
 
 def replace_tags_in_posts(root, allowed_tags):
