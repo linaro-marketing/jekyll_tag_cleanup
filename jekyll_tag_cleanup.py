@@ -41,7 +41,7 @@ def replace_tags_in_posts(root, allowed_tags):
     for file in file_list:
         print("Processing {}...".format(file))
         post = frontmatter.load(file)
-        if post["tags"]:
+        if "tags" in post:
             current_post_tags = post["tags"]
             new_post_tags = []
             for post_tag in current_post_tags:
